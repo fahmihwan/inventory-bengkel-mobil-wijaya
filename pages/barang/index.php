@@ -6,7 +6,8 @@ barang.id as id,
 barang.nama as nama,
 merek.nama as merek,
 kategori.nama as kategori,
-rak.nama as rak
+rak.nama as rak,
+qty
 FROM barang 
 INNER JOIN rak
 ON barang.rak_id = rak.id
@@ -40,6 +41,7 @@ ON barang.merek_id = merek.id");
                         <th>Merek</th>
                         <th>Kategori</th>
                         <th>Rak</th>
+                        <th>Qty</th>
                         <th>action</th>
                     </tr>
                 </thead>
@@ -55,6 +57,7 @@ ON barang.merek_id = merek.id");
                             <td><?= $data['merek'] ?></td>
                             <td><?= $data['kategori'] ?></td>
                             <td><?= $data['rak'] ?></td>
+                            <td><?= $data['qty'] ?></td>
                             <td class="text-center">
                                 <a href="index.php?data-barang=update&id=<?= $data['id']; ?>" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen-to-square"></i>

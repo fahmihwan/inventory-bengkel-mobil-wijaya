@@ -9,16 +9,74 @@ INNER JOIN kategori
 ON barang.kategori_id = kategori.id
 INNER JOIN rak
 ON barang.rak_id = rak.id";
+
 $queryAllBarang = mysqli_query($conn, $sql);
+$queryAllSupplier = mysqli_query($conn, "SELECT * FROM supplier");
+
+// function membuat nomer referensi
+function create_no_referens($select_no_ref)
+{
+    if ($select_no_ref == null) {
+        $nota = "IN" . date('Ymd') . "001";
+    } else if (substr($select_no_ref, 8, 2) != date('d')) {
+        $nota = "IN" . date('Ymd') . "001";
+    } else {
+        $cut = (int)substr($select_no_ref, 10, 3);
+        $number = str_pad($cut + 1, 3, "0", STR_PAD_LEFT);;
+        $nota = "IN" . date('Ymd') . $number;
+    }
+    return $nota;
+}
 
 
-// if (isset($_POST['add-barang'])) {
-//     $brg = $_POST['select-barang'];
-//     $data = json_decode($brg, true);
-//     var_dump($data['nama']);
-//     var_dump($data['id']);
-//     die;
-// }
+if (isset($_POST['submit-barang'])) {
+
+    // get value from input user
+    $cart = json_decode($_POST['cart'], true);
+    $tanggal = $_POST['tanggal'];
+    $supplier = $_POST['supplier'];
+    $catatan = $_POST['catatan'];
+
+    try {
+        $db = new PDO(dsn: 'mysql:host=localhost;dbname=db_inventroy_wijaya', username: 'root', password: 'root');
+        $db->beginTransaction();
+
+        // get no referensi & create no referensi using function and return $get_no_referensi
+        $no_referensi = mysqli_query($conn, "SELECT no_referensi FROM barang_masuk ORDER BY no_referensi DESC LIMIT 1");
+        $select_no_referensi = mysqli_fetch_assoc($no_referensi)['no_referensi'];
+        $get_no_referensi = create_no_referens($select_no_referensi);
+
+        // query insert barang
+        mysqli_query($conn, "INSERT INTO barang_masuk (no_referensi, supplier_id, tanggal, catatan) VALUES ('$get_no_referensi','$supplier','$tanggal','$catatan')");
+
+        // query insert many 
+        $insertId =  mysqli_query($conn, "SELECT id FROM barang_masuk ORDER BY id DESC LIMIT 1");
+        $get_insertId = mysqli_fetch_assoc($insertId)['id'];
+
+        foreach ($cart as $c) {
+            $barang_id = $c['barang_id'];
+            $qty = $c['qty'];
+            mysqli_query($conn, "INSERT INTO transaksi_barang_masuk (barang_masuk_id, barang_id, qty) VALUES ('$get_insertId','$barang_id','$qty')");
+
+            //update stok barang
+            $queryQtyBarang = mysqli_query($conn, "SELECT qty FROM barang WHERE id='$barang_id'");
+            $currentQty = mysqli_fetch_array($queryQtyBarang)['qty'];
+            $currentQty += $qty;
+            mysqli_query($conn, "UPDATE barang SET qty='$currentQty' WHERE id='$barang_id'");
+        }
+
+        $db->commit();
+    } catch (\Throwable $e) {
+        $db->rollback();
+        throw $e;
+    }
+
+    if (mysqli_affected_rows($conn)) {
+        echo "<script>
+            window.location.href='index.php?menu=barang-masuk';
+        </script>";
+    }
+}
 
 ?>
 
@@ -73,6 +131,10 @@ $queryAllBarang = mysqli_query($conn, $sql);
                         </div>
                         <button id="add-barang" class="btn btn-outline-success rounded mt-4" style="height: 40px;"><i class="fa-solid fa-plus"></i> add</button>
                     </div>
+
+                    <div id="alert-barang">
+
+                    </div>
                     <!-- </form> -->
                 </div>
                 <!-- end add barang -->
@@ -89,26 +151,36 @@ $queryAllBarang = mysqli_query($conn, $sql);
                     <span class="float-end text-small">Current Date : <?= date('Y-m-d'); ?></span>
                 </div>
                 <div class="card-body px-4">
-                    <form action="" class="">
+                    <form action="" method="POST">
                         <div class="row">
+
+                            <input type="hidden" name="cart" id="input-cart" readonly>
+
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="nama" class="form-label py-0 m-0">Tanggal</label>
-                                    <input type="date" class="form-control rounded-pill border-none" id="nama" name="nama" placeholder="nama" required style="box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;">
+                                    <input type="date" class="form-control rounded-pill border-none" id="nama" name="tanggal" placeholder="nama" required style="box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="nama" class="form-label py-0 m-0">Supplier</label>
-                                    <input type="text" class="form-control rounded-pill border-none" id="nama" name="nama" placeholder="nama" required style="box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;">
+                                    <!-- <input type="text" class="form-control rounded-pill border-none" id="nama" name="supplier" placeholder="nama" required style="box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;"> -->
+                                    <select name="supplier" id="select-supplier" class="js-example-basic-single-supplier form-control rounded-pill border-none py-2" style=" box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;">
+                                        <option selected value="default"> -- pilih supplier-- </option>
+                                        <?php while ($data = mysqli_fetch_assoc($queryAllSupplier)) : ?>
+                                            <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
+                                        <?php
+                                        endwhile;
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="alamat" class="form-label py-0 m-0">Catatan</label>
-                            <!-- <input type="text" class="form-control rounded-pill border-none" id="alamat" name="alamat" placeholder="alamat" required style="box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;"> -->
-                            <textarea class="form-control" name="" id="" cols="10" rows="2"></textarea>
+                            <label for="catatan" class="form-label py-0 m-0">Catatan</label>
+                            <textarea class="form-control" name="catatan" id="catatan" cols="10" rows="2"></textarea>
                         </div>
 
 
@@ -123,24 +195,24 @@ $queryAllBarang = mysqli_query($conn, $sql);
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="append-array-cart">
 
-                                <tr style="font-size: 12px;">
+                                <!-- <tr style="font-size: 12px;">
                                     <th scope="row">1</th>
                                     <td>ssd</td>
                                     <td>ssd</td>
                                     <td>ssd</td>
                                     <td>ssd</td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger">
+                                        <button class="btn btn-delete-table  btn-sm btn-danger">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </td>
-                                </tr>
+                                </tr> -->
 
                             </tbody>
                         </table>
-                        <button class="btn btn-primary rounded-pill">submit</button>
+                        <button type="submit" name="submit-barang" class="btn btn-primary rounded-pill">submit</button>
                         <button class="btn btn-secondary rounded-pill">clear</button>
                     </form>
                 </div>
@@ -156,9 +228,12 @@ $queryAllBarang = mysqli_query($conn, $sql);
 <script>
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
+        $('.js-example-basic-single-supplier').select2();
+
         let barang = ''
 
         let cartBarang = []
+
         $('.js-example-basic-single').change(function(e) {
             $.ajax({
                 url: "pages/json-data/get_barang.php?id=" + $('.js-example-basic-single').val(),
@@ -166,7 +241,6 @@ $queryAllBarang = mysqli_query($conn, $sql);
                 dataType: 'json',
                 ContentType: 'application/json',
                 success: (response) => {
-                    // $('#current-qty').val = barang.qty;
                     if (response.data != null) {
                         barang = response.data
                         $('#current-qty').val(barang.qty)
@@ -178,40 +252,79 @@ $queryAllBarang = mysqli_query($conn, $sql);
             })
         })
 
+        // script
         let inputQty = 0
         $('#input-qty').keyup(function(e) {
             inputQty = e.target.value
         })
-
         $('#input-qty').change(function(e) {
             inputQty = e.target.value
         })
-        // console.log($('#input-qty').val())
 
-
+        // add click
         $('#add-barang').click(function() {
-            // console.log($('.js-example-basic-single'))
-            if (inputQty <= 0 || inputQty == 'undefined' || inputQty == null) {
+            inputQty = $('#input-qty').val();
+            let currentQty = $('.js-example-basic-single').val()
+            if (inputQty <= 0 || inputQty == 'undefined' || inputQty == null || currentQty == 'default') {
                 console.log('fail')
+                $('#alert-barang').html(`  
+                 <div class="alert p-1 alert-danger mt-3" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i> Oops! Barang dan jumlah harus diisi...
+                </div>`)
             } else {
+                $('#alert-barang').html(``) //add barang success
                 cartBarang.push({
-                    id: barang.id,
-                    kategori_id: barang.nama,
-                    kategori_nama: barang.kategori_nama,
-                    merek_id: barang.merek_id,
-                    merek_nama: barang.merek_nama,
+                    cart_id: Math.floor((Math.random() * 1000) + 1),
+                    barang_id: barang.id,
                     nama: barang.nama,
-                    qty: barang.qty,
-                    rak_id: barang.rak_id,
-                    rak_nama: barang.rak_nama
+                    kategori_nama: barang.kategori_nama,
+                    merek_nama: barang.merek_nama,
+                    qty: $('#input-qty').val(),
                 })
-                console.log(cartBarang)
-                // console.log($('#select-barang').val())
-            }
 
-            $("#select-barang").val('default').change();
-            $('#current-qty').val('')
+                console.log(cartBarang)
+                $('#input-cart').val(JSON.stringify(cartBarang))
+                $("#select-barang").val('default').change();
+                $('#input-qty').val('')
+                $('#current-qty').val('')
+                printHtml()
+            }
+            // end add click
         })
+
+        // print Html
+        function printHtml() {
+            let text = ''
+            for (let i = 0; i <= cartBarang.length - 1; i++) {
+                text += `<tr style="font-size: 12px;">
+                                    <th scope="row">${i + 1}</th>
+                                    <td>${cartBarang[i].nama}</td>
+                                    <td>${cartBarang[i].merek_nama}</td>
+                                    <td>${cartBarang[i].kategori_nama}</td>
+                                    <td>${cartBarang[i].qty}</td>
+                                    <td>
+                                        <a href='#' data-id=${cartBarang[i].cart_id} class="btn btn-delete-table btn-sm btn-danger">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>`
+            }
+            $('#append-array-cart').html(text);
+            deleteBarang()
+        }
+
+        function deleteBarang() {
+            $('.btn-delete-table').click(function(e) {
+                e.preventDefault()
+                const index = cartBarang.findIndex(x => x.cart_id == $(this).attr('data-id'))
+                console.log(index)
+                cartBarang.splice(index, 1);
+                printHtml()
+            })
+        }
+
+
+
 
 
 

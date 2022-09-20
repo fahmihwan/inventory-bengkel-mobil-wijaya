@@ -5,7 +5,6 @@ $conn = mysqli_connect('localhost', 'root', 'root', 'db_inventroy_wijaya');
 
 $id = $_GET['id'];
 
-
 $sql = "SELECT barang.id as id, barang.nama as nama, merek.id as merek_id, merek.nama as merek_nama, kategori.id as kategori_id, kategori.nama as kategori_nama, rak.id as rak_id, rak.nama as rak_nama,qty
 FROM barang
 INNER JOIN merek

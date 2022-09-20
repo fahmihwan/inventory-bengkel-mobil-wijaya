@@ -1,3 +1,19 @@
+<?php
+include './koneksi.php';
+
+
+
+$sql = "SELECT
+barang_keluar.id as id, kode_referensi, tanggal, nama, catatan
+FROM barang_keluar
+INNER JOIN montir
+ON montir.id = barang_keluar.montir_id ";
+$queryBarang = mysqli_query($conn, $sql);
+
+
+
+
+?>
 <div class="container-fluid px-4 ">
     <ol class="breadcrumb pt-2">
         <li class="breadcrumb-item ">Data Barang Keluar</li>
@@ -19,6 +35,7 @@
                 <thead class="">
                     <tr>
                         <th>no</th>
+                        <th>Kode Refernsi</th>
                         <th>Tanggal</th>
                         <th>Montir</th>
                         <th>Catatan</th>
@@ -27,21 +44,33 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>sdsadasdjha</td>
-                        <td>sdsadasdjha</td>
-                        <td>sdsadasdjha</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-warning">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fa-sharp fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-
+                    <?php
+                    $i = 1;
+                    while ($data = mysqli_fetch_assoc($queryBarang)) :
+                    ?>
+                        <tr>
+                            <td><?= $i += 1 ?></td>
+                            <td><?= $data['kode_referensi'] ?></td>
+                            <td><?= $data['tanggal'] ?></td>
+                            <td><?= $data['nama'] ?></td>
+                            <td><?= $data['catatan'] ?></td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <a href="index.php?barang-masuk=delete&id= <?= $data['id'] ?>" class="btn btn-sm btn-danger">
+                                    <i class="fa-sharp fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="index.php?barang-keluar=detail&id= <?= $data['id'] ?>" class="btn btn-sm btn-info text-white">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                    endwhile;
+                    ?>
                 </tbody>
             </table>
         </div>
