@@ -238,7 +238,7 @@ $barang_masuk_id = $_GET['id'];
         let cartDeleteBarang = []
 
         $.ajax({
-            url: "pages/json-data/get_detail_barang.php?id=" + $('#get-id-from-url').val(),
+            url: "pages/json-data/get_detail_barang_masuk.php?id=" + $('#get-id-from-url').val(),
             type: "GET",
             dataType: 'json',
             ContentType: 'application/json',

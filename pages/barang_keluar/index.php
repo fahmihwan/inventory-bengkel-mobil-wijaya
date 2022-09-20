@@ -47,21 +47,16 @@ $queryBarang = mysqli_query($conn, $sql);
                     <?php
                     $i = 1;
                     while ($data = mysqli_fetch_assoc($queryBarang)) :
+                        $id = $data['id'];
+                        $queryCountQty = mysqli_query($conn, "SELECT sum(qty) as qty FROM transaksi_barang_keluar WHERE barang_keluar_id='$id'");
+                        $getQty = mysqli_fetch_assoc($queryCountQty);
                     ?>
                         <tr>
                             <td><?= $i += 1 ?></td>
                             <td><?= $data['kode_referensi'] ?></td>
                             <td><?= $data['tanggal'] ?></td>
                             <td><?= $data['nama'] ?></td>
-                            <td><?= $data['catatan'] ?></td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-warning">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <a href="index.php?barang-masuk=delete&id= <?= $data['id'] ?>" class="btn btn-sm btn-danger">
-                                    <i class="fa-sharp fa-solid fa-trash"></i>
-                                </a>
-                            </td>
+                            <td><?= $getQty['qty'] ?></td>
                             <td class="text-center">
                                 <a href="index.php?barang-keluar=detail&id= <?= $data['id'] ?>" class="btn btn-sm btn-info text-white">
                                     <i class="fa-solid fa-folder-open"></i>

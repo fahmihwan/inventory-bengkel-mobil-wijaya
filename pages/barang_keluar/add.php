@@ -41,6 +41,7 @@ if (isset($_POST['submit-barang'])) {
 
 
 
+
     try {
         // Matikan autocommit 
         mysqli_autocommit($conn, FALSE);
