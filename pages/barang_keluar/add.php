@@ -14,8 +14,6 @@ $queryAllBarang = mysqli_query($conn, $sql);
 $queryAllSupplier = mysqli_query($conn, "SELECT * FROM montir");
 
 // function membuat nomer referensi
-
-
 function create_no_referens($select_kode_ref)
 {
     if ($select_kode_ref == null) {
@@ -30,7 +28,6 @@ function create_no_referens($select_kode_ref)
     return $nota;
 }
 
-
 if (isset($_POST['submit-barang'])) {
 
     // get value from input user
@@ -38,8 +35,6 @@ if (isset($_POST['submit-barang'])) {
     $tanggal = $_POST['tanggal'];
     $montir = $_POST['montir'];
     $catatan = $_POST['catatan'];
-
-
 
 
     try {
@@ -78,6 +73,9 @@ if (isset($_POST['submit-barang'])) {
             }
             mysqli_query($conn, "UPDATE barang SET qty='$currentQty' WHERE id='$barang_id'");
         }
+        echo "<script>
+        window.location.href ='index.php?menu=barang-keluar';
+       </script>";
 
         mysqli_commit($conn);
     } catch (\Throwable $e) {
@@ -90,7 +88,7 @@ if (isset($_POST['submit-barang'])) {
 
 <div class="container-fluid px-4 ">
     <ol class="breadcrumb pt-2">
-        <li class="breadcrumb-item ">montir</li>
+        <li class="breadcrumb-item ">Barang Keluar</li>
         <li class="breadcrumb-item"><a href="index.php?menu=barang-keluar">List Data</a></li>
         <li class="breadcrumb-item active">Input Barang Keluar</li>
     </ol>

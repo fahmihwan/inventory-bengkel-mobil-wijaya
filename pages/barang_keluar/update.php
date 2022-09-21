@@ -93,15 +93,6 @@ if (isset($_POST['submit-barang'])) {
     }
 }
 
-// echo "
-// <script>
-// alert('gagal, stok barang habis')
-// window.location.href='index.php?barang-keluar=add';
-// </script>
-// ";
-
-
-
 
 ?>
 

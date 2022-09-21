@@ -29,9 +29,12 @@ $brgMasuk = mysqli_fetch_assoc($queryBrgMasuk);
             </div>
             <div class="d-flex align-items-center">
                 <div class="me-3">
-                    <button class="btn btn-outline-info me-2">
+                    <a href="index.php?barang-masuk=delete&id=<?= $id ?>" class="btn btn-outline-danger me-2">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    <a href='pages/print/print_barang_masuk.php?id=<?= $id ?>' class="btn btn-outline-info me-2">
                         <i class="fa-solid fa-print"></i>
-                    </button>
+                    </a>
                     <a href="index.php?barang-masuk=update&id=<?= $id ?>" class="btn btn-outline-warning">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
@@ -89,7 +92,6 @@ $brgMasuk = mysqli_fetch_assoc($queryBrgMasuk);
                         INNER JOIN kategori 
                         ON kategori.id = barang.kategori_id
                         WHERE barang_masuk_id='$id'";
-
                             $dataBarang = mysqli_query($conn, $sqll);
                             $i = 1;
                             while ($data = mysqli_fetch_assoc($dataBarang)) :

@@ -34,14 +34,11 @@ if (isset($_POST['submit-barang'])) {
     $catatan = $_POST['catatan'];
 
 
-    $tes =  mysqli_query($conn, "UPDATE barang_masuk 
+    mysqli_query($conn, "UPDATE barang_masuk 
     SET supplier_id='$supplier',
     catatan='$catatan',
     tanggal='$tanggal'
     WHERE id='$barang_masuk_id'");
-
-
-
 
 
     try {
@@ -69,6 +66,20 @@ if (isset($_POST['submit-barang'])) {
                 if ($delete_cart[$j]['transaksi_masuk_id'] != null) {
                     $transaksi_id = $delete_cart[$j]['transaksi_masuk_id'];
                     mysqli_query($conn, "DELETE FROM transaksi_barang_masuk WHERE id='$transaksi_id'");
+
+                    $barang_id =  $delete_cart[$j]['barang_id'];
+                    $queryQtyBarang = mysqli_query($conn, "SELECT qty FROM barang WHERE id='$barang_id'");
+                    $currentQty = mysqli_fetch_array($queryQtyBarang)['qty'];
+                    $currentQty -= $delete_cart[$j]['qty'];
+                    if ($currentQty <= 0) {
+                        echo "
+                        <script>
+                        alert('gagal, stok tidak cukup ')
+                        </script>
+                        ";
+                        throw new Exception('File could not be found');
+                    }
+                    mysqli_query($conn, "UPDATE barang SET qty='$currentQty' WHERE id='$barang_id'");
                 }
             }
         }
@@ -260,7 +271,6 @@ $barang_masuk_id = $_GET['id'];
 
                     $('#input-cart').val(JSON.stringify(cartBarang))
                     printHtml()
-
                 }
             },
             error: (err) => {
@@ -362,11 +372,6 @@ $barang_masuk_id = $_GET['id'];
                 printHtml()
             })
         }
-
-
-
-
-
 
 
 

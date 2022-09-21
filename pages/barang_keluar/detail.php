@@ -30,9 +30,12 @@ $brgMasuk = mysqli_fetch_assoc($queryBrgMasuk);
             </div>
             <div class="d-flex align-items-center">
                 <div class="me-3">
-                    <button class="btn btn-outline-info me-2">
+                    <a href="index.php?barang-keluar=delete&id=<?= $id ?>" class="btn btn-outline-danger me-2">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    <a href="pages/print/print_barang_keluar.php?id=<?= $id ?>" class="btn btn-outline-info me-2">
                         <i class="fa-solid fa-print"></i>
-                    </button>
+                    </a>
                     <a href="index.php?barang-keluar=update&id=<?= $id ?>" class="btn btn-outline-warning">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
