@@ -8,13 +8,16 @@ FROM barang_keluar
 INNER JOIN montir
 ON montir.id = barang_keluar.montir_id ";
 $queryBarang = mysqli_query($conn, $sql);
-// $arr = [];
-// while ($data = mysqli_fetch_assoc($queryBarang)) {
-//     $arr[] = $data;
-// }
-// var_dump($arr);
-// die;
 
+
+if (isset($_POST['search'])) {
+    $start = $_POST['start'];
+    $end = $_POST['end'];
+    $queryBarang = mysqli_query($conn, "SELECT barang_keluar.id as id, kode_referensi, tanggal, nama, catatan
+    FROM barang_keluar
+    INNER JOIN montir
+    ON montir.id = barang_keluar.montir_id WHERE tanggal BETWEEN '$start' AND '$end'");
+}
 ?>
 <div class="container-fluid px-4 ">
     <ol class="breadcrumb pt-2">
@@ -29,20 +32,31 @@ $queryBarang = mysqli_query($conn, $sql);
             </div>
         </div>
         <div class="card-header mb-3" style="border-radius: 20px ;background-color: white; border:0px;">
-            <div class="d-flex flex-wrap align-items-center">
-                <div class="me-4 mb-2 mb-md-0 d-flex align-items-center  ">
-                    <label for="" class="me-0" style="width: 110px;">start date</label>
-                    <input type="date" class="form-control">
+            <form action="" method="POST">
+                <div class="d-flex flex-wrap align-items-center">
+                    <div class="me-4 mb-2 mb-md-0 d-flex align-items-center  ">
+                        <label for="" class="me-0" style="width: 110px;">start date</label>
+                        <input type="date" id="start" name="start" value="<?= $start ?>" class="form-control">
+                    </div>
+                    <div class="me-4  d-flex align-items-center ">
+                        <label for="" class="me-0 pe-0" style="width: 110px;">start date</label>
+                        <input type="date" id="end" name="end" value="<?= $end ?>" class="form-control">
+                    </div>
+                    <div class="me-2 d-flex align-items-center ">
+                        <button type="submit" name="search" class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="me-4 d-flex align-items-center ">
+                        <a href="" class="btn btn-warning">
+                            <i class="fa-solid fa-repeat"></i>
+                        </a>
+                    </div>
+                    <div class="me-4 d-flex align-items-center ">
+                        <a id="print-laporan" href="pages/print/print_laporan_keluar.php?start=<?= isset($start) != '0' ? $start : null ?>&end=<?= isset($end) != null ? $end : null ?>" class="btn btn-info">
+                            <i class="fa-solid fa-print"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="me-4  d-flex align-items-center ">
-                    <label for="" class="me-0 pe-0" style="width: 110px;">start date</label>
-                    <input type="date" class="form-control">
-                </div>
-
-                <div class="me-4 d-flex align-items-center ">
-                    <button class="btn btn-primary">Search</button>
-                </div>
-            </div>
+            </form>
         </div>
         <div class="p-3  bg-white " style="border-radius: 20px; ">
             <table id="datatablesSimple" style="border-color: white;">
