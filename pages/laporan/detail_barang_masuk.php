@@ -29,15 +29,11 @@ $brgMasuk = mysqli_fetch_assoc($queryBrgMasuk);
             </div>
             <div class="d-flex align-items-center">
                 <div class="me-3">
-                    <a href="index.php?barang-masuk=delete&id=<?= $id ?>" class="btn btn-outline-danger me-2">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>
+
                     <a href='pages/print/print_barang_masuk.php?id=<?= $id ?>' class="btn btn-outline-info me-2">
                         <i class="fa-solid fa-print"></i>
                     </a>
-                    <a href="index.php?barang-masuk=update&id=<?= $id ?>" class="btn btn-outline-warning">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
+
                 </div>
                 <table>
                     <tr>

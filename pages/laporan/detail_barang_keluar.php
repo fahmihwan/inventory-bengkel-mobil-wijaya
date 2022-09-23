@@ -30,11 +30,9 @@ $brgMasuk = mysqli_fetch_assoc($queryBrgMasuk);
             </div>
             <div class="d-flex align-items-center">
                 <div class="me-3">
-
                     <a href="pages/print/print_barang_keluar.php?id=<?= $id ?>" class="btn btn-outline-info me-2">
                         <i class="fa-solid fa-print"></i>
                     </a>
-
                 </div>
                 <table>
                     <tr>

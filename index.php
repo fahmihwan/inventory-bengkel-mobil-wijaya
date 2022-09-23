@@ -7,125 +7,7 @@ if (!$varSession) {
     header('Location:authentication/login.php');
 }
 
-if (isset($_GET['menu'])) {
-    $sidebar = $_GET['menu'];           //menu
-    switch ($sidebar) {
-        case 'dashboard':
-            break;
-        case 'supplier':
-            // if ($varSession['hak_akses'] == 'admin') {
-            // header('Location:authentication/login.php');
-            // }
-            break;
-        case 'montir':
-            break;
-        case 'merek':
-            break;
-        case 'kategori':
-            break;
-        case 'rak':
-            break;
-        case 'data-barang':
-            break;
-        case 'barang-keluar':
-            break;
-        case 'barang-masuk':
-            break;
-        case 'akun':
-            break;
-    }
-} elseif (isset($_GET['kategori'])) {
-    $kategori = $_GET['kategori'];     //kategori
-    switch ($kategori) {
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['merek'])) {
-    $merek = $_GET['merek'];     //merek
-    switch ($merek) {
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['rak'])) {
-    $merek = $_GET['rak'];     //merek
-    switch ($merek) {
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['supplier'])) {
-    $supplier = $_GET['supplier'];     //supplier
-    switch ($supplier) {
-        case 'add':
-            break;
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['montir'])) {
-    $montir = $_GET['montir'];
-    switch ($montir) {
-        case 'add':
-            break;
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['data-barang'])) {
-    $barang = $_GET['data-barang'];
-    switch ($barang) {
-        case 'add':
-            break;
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['barang-masuk'])) {
-    $barang_masuk = $_GET['barang-masuk'];
-    switch ($barang_masuk) {
-        case 'add':
-            break;
-        case 'detail':
-            break;
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['barang-keluar'])) {
-    $barang_masuk = $_GET['barang-keluar'];
-    switch ($barang_masuk) {
-        case 'add':
-            break;
-        case 'detail':
-            break;
-        case 'update':
-            break;
-        case 'delete':
-            break;
-    }
-} elseif (isset($_GET['akun'])) {
-    $barang_masuk = $_GET['akun'];
-    switch ($barang_masuk) {
-        case 'add':
-            break;
-        case 'delete':
-            break;
-    }
-}
-
-// if (!$varSession) {
-//     header('Location:authentication/login.php');
-// }
-
+include './htacces.php';
 
 ?>
 <!DOCTYPE html>
@@ -342,8 +224,6 @@ if (isset($_GET['menu'])) {
             </main>
         </div>
     </div>
-
-
 
 
 
