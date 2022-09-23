@@ -8,7 +8,12 @@ FROM barang_keluar
 INNER JOIN montir
 ON montir.id = barang_keluar.montir_id ";
 $queryBarang = mysqli_query($conn, $sql);
-
+// $arr = [];
+// while ($data = mysqli_fetch_assoc($queryBarang)) {
+//     $arr[] = $data;
+// }
+// var_dump($arr);
+// die;
 
 ?>
 <div class="container-fluid px-4 ">
@@ -18,14 +23,26 @@ $queryBarang = mysqli_query($conn, $sql);
     </ol>
     <div class="mb-4">
         <div class="card-header clearfix mb-3" style="border-radius: 20px ;background-color: white; border:0px;">
-            <i class="fa-solid fa-box"></i>
-            <span class="ms-2 fw-bolder"> Data Barang Keluar</span>
-
-            <!-- Button trigger modal -->
-            <a href="index.php?barang-keluar=add" class=" btn btn-sm btn-primary float-end rounded-pill">
-                tambah data
+            <div class="float-start pt-1">
                 <i class="fa-solid fa-box"></i>
-            </a>
+                <span class="ms-2 fw-bolder"> Data Barang Keluar</span>
+            </div>
+        </div>
+        <div class="card-header mb-3" style="border-radius: 20px ;background-color: white; border:0px;">
+            <div class="d-flex flex-wrap align-items-center">
+                <div class="me-4 mb-2 mb-md-0 d-flex align-items-center  ">
+                    <label for="" class="me-0" style="width: 110px;">start date</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="me-4  d-flex align-items-center ">
+                    <label for="" class="me-0 pe-0" style="width: 110px;">start date</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="me-4 d-flex align-items-center ">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+            </div>
         </div>
         <div class="p-3  bg-white " style="border-radius: 20px; ">
             <table id="datatablesSimple" style="border-color: white;">
@@ -35,7 +52,7 @@ $queryBarang = mysqli_query($conn, $sql);
                         <th>Kode Refernsi</th>
                         <th>Tanggal</th>
                         <th>Montir</th>
-                        <th>Catatan</th>
+                        <th>Qty</th>
                         <th>action</th>
                     </tr>
                 </thead>
@@ -49,13 +66,13 @@ $queryBarang = mysqli_query($conn, $sql);
                         $getQty = mysqli_fetch_assoc($queryCountQty);
                     ?>
                         <tr>
-                            <td><?= $i += 1 ?></td>
+                            <td><?= $i++ ?></td>
                             <td><?= $data['kode_referensi'] ?></td>
                             <td><?= $data['tanggal'] ?></td>
                             <td><?= $data['nama'] ?></td>
                             <td><?= $getQty['qty'] ?></td>
                             <td class="text-center">
-                                <a href="index.php?barang-keluar=detail&id= <?= $data['id'] ?>" class="btn btn-sm btn-info text-white">
+                                <a href="index.php?laporan=detail-barang-keluar&id= <?= $data['id'] ?>" class="btn btn-sm btn-info text-white">
                                     <i class="fa-solid fa-folder-open"></i>
                                 </a>
                             </td>

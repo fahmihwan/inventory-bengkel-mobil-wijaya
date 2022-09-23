@@ -1,3 +1,133 @@
+<?php
+
+session_start();
+$varSession = $_SESSION;
+
+if (!$varSession) {
+    header('Location:authentication/login.php');
+}
+
+if (isset($_GET['menu'])) {
+    $sidebar = $_GET['menu'];           //menu
+    switch ($sidebar) {
+        case 'dashboard':
+            break;
+        case 'supplier':
+            // if ($varSession['hak_akses'] == 'admin') {
+            // header('Location:authentication/login.php');
+            // }
+            break;
+        case 'montir':
+            break;
+        case 'merek':
+            break;
+        case 'kategori':
+            break;
+        case 'rak':
+            break;
+        case 'data-barang':
+            break;
+        case 'barang-keluar':
+            break;
+        case 'barang-masuk':
+            break;
+        case 'akun':
+            break;
+    }
+} elseif (isset($_GET['kategori'])) {
+    $kategori = $_GET['kategori'];     //kategori
+    switch ($kategori) {
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['merek'])) {
+    $merek = $_GET['merek'];     //merek
+    switch ($merek) {
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['rak'])) {
+    $merek = $_GET['rak'];     //merek
+    switch ($merek) {
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['supplier'])) {
+    $supplier = $_GET['supplier'];     //supplier
+    switch ($supplier) {
+        case 'add':
+            break;
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['montir'])) {
+    $montir = $_GET['montir'];
+    switch ($montir) {
+        case 'add':
+            break;
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['data-barang'])) {
+    $barang = $_GET['data-barang'];
+    switch ($barang) {
+        case 'add':
+            break;
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['barang-masuk'])) {
+    $barang_masuk = $_GET['barang-masuk'];
+    switch ($barang_masuk) {
+        case 'add':
+            break;
+        case 'detail':
+            break;
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['barang-keluar'])) {
+    $barang_masuk = $_GET['barang-keluar'];
+    switch ($barang_masuk) {
+        case 'add':
+            break;
+        case 'detail':
+            break;
+        case 'update':
+            break;
+        case 'delete':
+            break;
+    }
+} elseif (isset($_GET['akun'])) {
+    $barang_masuk = $_GET['akun'];
+    switch ($barang_masuk) {
+        case 'add':
+            break;
+        case 'delete':
+            break;
+    }
+}
+
+// if (!$varSession) {
+//     header('Location:authentication/login.php');
+// }
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +137,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Inventori</title>
+    <title>LBS </title>
 
     <style>
         span.select2-container--default .select2-selection--single {
@@ -72,6 +202,9 @@
                             break;
                         case 'barang-masuk':
                             include "pages/barang_masuk/index.php";
+                            break;
+                        case 'akun':
+                            include "pages/akun/index.php";
                             break;
                         default:
                             echo "<center><h3>Maaf. Halaman tidak di temukan !</h3></center>";
@@ -178,24 +311,61 @@
                             include "pages/barang_keluar/delete.php";
                             break;
                     }
+                } elseif (isset($_GET['akun'])) {
+                    $barang_masuk = $_GET['akun'];
+                    switch ($barang_masuk) {
+                        case 'add':
+                            include "pages/akun/add.php";
+                            break;
+                        case 'delete':
+                            include "pages/akun/delete.php";
+                            break;
+                    }
+                } elseif (isset($_GET['laporan'])) {
+                    $barang_masuk = $_GET['laporan'];
+                    switch ($barang_masuk) {
+                        case 'barang-masuk':
+                            include "pages/laporan/laporan_barang_masuk.php";
+                            break;
+                        case 'barang-keluar':
+                            include "pages/laporan/laporan_barang_keluar.php";
+                            break;
+                        case 'detail-barang-masuk':
+                            include "pages/laporan/detail_barang_masuk.php";
+                            break;
+                        case 'detail-barang-keluar':
+                            include "pages/laporan/detail_barang_keluar.php";
+                            break;
+                    }
                 }
                 ?>
-
             </main>
         </div>
     </div>
+
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
+    <!-- hapus -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-pie-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
+
+    <?php
+    include './grafik/stok2.php';
+    ?>
+
+    <?php
+    include './grafik/jmlBarangKeluar2.php';
+    ?>
 
 </body>
 
